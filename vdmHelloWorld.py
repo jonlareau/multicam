@@ -1,5 +1,9 @@
 import numpy as np
 import cv2
+import gpsd
+
+# Note export DISPLAY=:0.0
+
 #from matplotlib import pyplot as plt
 
 # Remember to use the virtualenv (>> mkvirtualenv (name) -p python2) 
@@ -11,7 +15,7 @@ import cv2
 
 cap1 = cv2.VideoCapture(0)
 cap2 = cv2.VideoCapture(1)
-cap3 = cv2.VideoCapture(3)
+cap3 = cv2.VideoCapture(2)
 
 #w = 1280
 #h = 360
@@ -31,6 +35,7 @@ cv2.namedWindow("Frame C",cv2.WINDOW_NORMAL)
 #cv2.namedWindow("Frame D",cv2.WINDOW_NORMAL)
 #cv2.namedWindow("Result",cv2.WINDOW_NORMAL)
 
+gpsd.connect()
 i=0
 while(True):
     i=i+1
@@ -39,6 +44,10 @@ while(True):
     pf1 = cap1.grab()
     pf2 = cap2.grab()
     pf3 = cap3.grab()
+
+    gp = gpsd.get_current()
+    print("time="+gp.time+", lat="+str(gp.lat)+", lon="+str(gp.lon)+", alt="+str(gp.alt))
+
     ret1, frame1 = cap1.retrieve()
     ret2, frame2 = cap2.retrieve()
     ret3, frame3 = cap3.retrieve()
@@ -58,16 +67,16 @@ while(True):
 
     if (ret1 and ret2 and ret3):
         frame1l, frame1r = np.hsplit(frame1,2)
-        cv2.imwrite("data/camera1/left/camera1_left_" + str(i).zfill(6) + ".jpg", frame1l)
-        cv2.imwrite("data/camera1/right/camera1_right_" + str(i).zfill(6) + ".jpg", frame1r)
+        #cv2.imwrite("data/camera1/left/camera1_left_" + str(i).zfill(6) + ".jpg", frame1l)
+        #cv2.imwrite("data/camera1/right/camera1_right_" + str(i).zfill(6) + ".jpg", frame1r)
 
         frame2l, frame2r = np.hsplit(frame2,2)
-        cv2.imwrite("data/camera2/left/camera2_left_" + str(i).zfill(6) + ".jpg", frame2l)
-        cv2.imwrite("data/camera2/right/camera2_right_" + str(i).zfill(6) + ".jpg", frame2r)
+        #cv2.imwrite("data/camera2/left/camera2_left_" + str(i).zfill(6) + ".jpg", frame2l)
+        #cv2.imwrite("data/camera2/right/camera2_right_" + str(i).zfill(6) + ".jpg", frame2r)
 
         frame3l, frame3r = np.hsplit(frame3,2)
-        cv2.imwrite("data/camera3/left/camera3_left_" + str(i).zfill(6) + ".jpg", frame3l)
-        cv2.imwrite("data/camera3/right/camera3_right_" + str(i).zfill(6) + ".jpg", frame3r)
+        #cv2.imwrite("data/camera3/left/camera3_left_" + str(i).zfill(6) + ".jpg", frame3l)
+        #cv2.imwrite("data/camera3/right/camera3_right_" + str(i).zfill(6) + ".jpg", frame3r)
 
     # Display the resulting frame
     if ret1:
